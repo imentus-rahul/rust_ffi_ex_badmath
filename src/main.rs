@@ -1,0 +1,64 @@
+#[link(name = "badmath", kind = "static")]
+extern "C" {
+    fn bad_add(V1: f32, V2: f32) -> f32;
+}
+
+fn main() {
+    println!("RUST: Hello, world!");
+    let res = unsafe {
+        // we personally trust this code
+        // type checking // type safety // race conditions are not checked by rust at compile time
+        // we take pre compiled C libraries and invoke directly inside rust
+        bad_add(9.0, 12.0)
+    };
+    println!("RUST: res: {:?}", res);
+}
+
+// use std::fmt;
+
+// // this extern block links to the libm library
+// #[link(name = "m")]
+// extern {
+//     // this is a foreign function
+//     // that computes the square root of a single precision complex number
+//     fn csqrtf(z: Complex) -> Complex;
+
+//     fn ccosf(z: Complex) -> Complex;
+// }
+
+// // Since calling foreign functions is considered unsafe,
+// // it's common to write safe wrappers around them.
+// fn cos(z: Complex) -> Complex {
+//     unsafe { ccosf(z) }
+// }
+
+// fn main() {
+//     // z = -1 + 0i
+//     let z = Complex { re: -1., im: 0. };
+
+//     // calling a foreign function is an unsafe operation
+//     let z_sqrt = unsafe { csqrtf(z) };
+
+//     println!("the square root of {:?} is {:?}", z, z_sqrt);
+
+//     // calling safe API wrapped around unsafe operation
+//     println!("cos({:?}) = {:?}", z, cos(z));
+// }
+
+// // Minimal implementation of single precision complex numbers
+// #[repr(C)]
+// #[derive(Clone, Copy)]
+// struct Complex {
+//     re: f32,
+//     im: f32,
+// }
+
+// impl fmt::Debug for Complex {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         if self.im < 0. {
+//             write!(f, "{}-{}i", self.re, -self.im)
+//         } else {
+//             write!(f, "{}+{}i", self.re, self.im)
+//         }
+//     }
+// }
